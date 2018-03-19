@@ -1,0 +1,63 @@
+/* SET FLUID TYPOGRAPHY - 16px at 400px viewport and 14px minimum */
+
+:root {
+    font-size: calc(0.600em + .5vw);
+}
+
+h1 {
+    font-size: 1.602rem;
+}
+
+h2 {
+    font-size: 1.424rem;
+}
+
+h3 {
+    font-size: 1.266rem;
+}
+
+h4 {
+    font-size: 1.125rem;
+}
+
+p {
+    font-size: 1rem;
+}
+
+/* BACKGROUND */
+
+body {
+    margin: 0;
+    color: #fff;
+}
+
+
+.bg-main {
+    background: url("images/moon.jpg") no-repeat center center fixed;
+    background-size: cover;
+    height: 100vh;
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start;
+    align-items: center;
+}
+
+.logo {
+    align-self: flex-start;
+    flex: 0 1 20%;
+    margin-left: 4rem;
+    margin-top: 2rem;
+}
+
+.heading {
+    flex: 0 1 15%
+}
+
+.photo-credit {
+    position: absolute;
+    bottom: 0;
+    right: 0;
+}
+
+/* FORM */
+
