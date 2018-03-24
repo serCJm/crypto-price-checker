@@ -16,7 +16,14 @@ window.onload = function () {
         }
 
         xhr.open('GET', url, true);
+        // NOTE: onload expects a function reference
+        // to which we can't pass arguments
+        // have to assign a function to it whithin which
+        // you can call the desired function with arguments
+
         xhr.onload = function () {
+            // explicit binding
+            // because requestContents doesn't belong/exists to xhr
             requestContents.call(xhr, cb);
         };
 
@@ -129,40 +136,47 @@ window.onload = function () {
             // listen for arrow keys to change suggestions
             // and for enter key to set input value
 
-            searchField.onkeypress = function (e) {
-                console.log(e.keyCode);
+            searchField.onkeypress = function (k) {
+                // NOTE: this is implicitly bound to searchField
+                // onkeypress is a property on searchField, thus function is called
+                // in a context of searchField
+
+                console.log(k.keyCode);
                 // key down
-                if (e.keyCode === 40) {
+                if (k.keyCode === 40) {
                     // if currently on last element, change last to first
                     // while changing highlight from last to first
-                    console.log(this)
                     if (!this.current.nextElementSibling) {
-                        highlight.call(searchField.current);
-                        searchField.current = suggestions[0];
-                        highlight.call(searchField.current);
+                        highlight.call(this.current);
+                        this.current = suggestions[0];
+                        highlight.call(this.current);
                         // else, remove highlight and move to next current element
                     } else {
-                        highlight.call(searchField.current);
-                        searchField.current = this.current.nextElementSibling;
-                        highlight.call(searchField.current);
+                        highlight.call(this.current);
+                        this.current = this.current.nextElementSibling;
+                        highlight.call(this.current);
                     }
                 }
 
                 // key up
-                if (e.keyCode === 38) {
+                if (k.keyCode === 38) {
                     // if currently on last element, change last to first
                     // while changing highlight from last to first
-                    console.log(this);
                     if (!this.current.previousElementSibling) {
-                        highlight.call(searchField.current);
-                        searchField.current = suggestions[suggestions.length - 1];
-                        highlight.call(searchField.current);
+                        highlight.call(this.current);
+                        this.current = suggestions[suggestions.length - 1];
+                        highlight.call(this.current);
                         // else, remove highlight and move to next current element
                     } else {
-                        highlight.call(searchField.current);
-                        searchField.current = this.current.previousElementSibling;
-                        highlight.call(searchField.current);
+                        highlight.call(this.current);
+                        this.current = this.current.previousElementSibling;
+                        highlight.call(this.current);
                     }
+                }
+
+                // enter key - sets value in input box
+                if (k.keyCode === 13) {
+                    this.value = this.current.textContent;
                 }
             };
 
@@ -185,8 +199,21 @@ window.onload = function () {
         function highlight() {
             this.classList.toggle('suggested-coin-actv');
         }
+    })();
 
 
+    // request data basd on input value
+    // and display its price
+    (function displayPrices() {
+        // get input value
+
+        // match input value to symbol
+
+        // take sympbol and constract API request
+
+        // request API
+
+        // display the return value below input field
 
     })();
 
