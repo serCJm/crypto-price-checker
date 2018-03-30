@@ -124,75 +124,79 @@ window.onload = function () {
 
             // highlight suggestion
             var suggestions = document.querySelectorAll('.suggested-coin');
-            // set initial highlight
-            searchField.current = suggestions[0];
+            // check if there'are matching suggestions
+            if (suggestions.length > 0) {
+                // set initial highlight
+                searchField.current = suggestions[0];
 
-            // check if there's current value 
-            // in case API call is late
+                // highlight first choice
+                searchField.current.classList.toggle('suggested-coin-actv');
 
-            // highlight first choice
-            searchField.current.classList.toggle('suggested-coin-actv');
+                // listen for arrow keys to change suggestions
+                // and for enter key to set input value
 
-            // listen for arrow keys to change suggestions
-            // and for enter key to set input value
+                searchField.onkeypress = function (k) {
+                    // NOTE: this is implicitly bound to searchField
+                    // onkeypress is a property on searchField, thus function is called
+                    // in a context of searchField
 
-            searchField.onkeypress = function (k) {
-                // NOTE: this is implicitly bound to searchField
-                // onkeypress is a property on searchField, thus function is called
-                // in a context of searchField
-
-                console.log(k.keyCode);
-                // key down
-                if (k.keyCode === 40) {
-                    // if currently on last element, change last to first
-                    // while changing highlight from last to first
-                    if (!this.current.nextElementSibling) {
-                        highlight.call(this.current);
-                        this.current = suggestions[0];
-                        highlight.call(this.current);
-                        // else, remove highlight and move to next current element
-                    } else {
-                        highlight.call(this.current);
-                        this.current = this.current.nextElementSibling;
-                        highlight.call(this.current);
+                    console.log(k.keyCode);
+                    // key down
+                    if (k.keyCode === 40) {
+                        // if currently on last element, change last to first
+                        // while changing highlight from last to first
+                        if (!this.current.nextElementSibling) {
+                            highlight.call(this.current);
+                            this.current = suggestions[0];
+                            highlight.call(this.current);
+                            // else, remove highlight and move to next current element
+                        } else {
+                            highlight.call(this.current);
+                            this.current = this.current.nextElementSibling;
+                            highlight.call(this.current);
+                        }
                     }
-                }
 
-                // key up
-                if (k.keyCode === 38) {
-                    // if currently on last element, change last to first
-                    // while changing highlight from last to first
-                    if (!this.current.previousElementSibling) {
-                        highlight.call(this.current);
-                        this.current = suggestions[suggestions.length - 1];
-                        highlight.call(this.current);
-                        // else, remove highlight and move to next current element
-                    } else {
-                        highlight.call(this.current);
-                        this.current = this.current.previousElementSibling;
-                        highlight.call(this.current);
+                    // key up
+                    if (k.keyCode === 38) {
+                        // if currently on last element, change last to first
+                        // while changing highlight from last to first
+                        if (!this.current.previousElementSibling) {
+                            highlight.call(this.current);
+                            this.current = suggestions[suggestions.length - 1];
+                            highlight.call(this.current);
+                            // else, remove highlight and move to next current element
+                        } else {
+                            highlight.call(this.current);
+                            this.current = this.current.previousElementSibling;
+                            highlight.call(this.current);
+                        }
                     }
+
+                    // enter key - sets value in input box
+                    if (k.keyCode === 13) {
+                        this.value = this.current.textContent;
+                        document.getElementById('dropdown-content').innerHTML = '';
+                    }
+
+                };
+
+
+                for (var i = 0; i < suggestions.length; i++) {
+                    // highlight on mouse over
+                    suggestions[i].addEventListener('mouseenter', function () {
+                        // remove highlight from a current element
+                        searchField.current.classList.toggle('suggested-coin-actv');
+                        // set current to mouse over element
+                        searchField.current = this;
+                        highlight.call(this);
+                    });
+                    suggestions[i].addEventListener('click', function () {
+                        searchField.value = this.textContent;
+                        document.getElementById('dropdown-content').innerHTML = '';
+                    });
                 }
-
-                // enter key - sets value in input box
-                if (k.keyCode === 13) {
-                    this.value = this.current.textContent;
-                }
-            };
-
-
-            for (var i = 0; i < suggestions.length; i++) {
-                // highlight on mouse over
-                suggestions[i].addEventListener('mouseenter', function () {
-                    // remove highlight from a current element
-                    searchField.current.classList.toggle('suggested-coin-actv');
-                    // set current to mouse over element
-                    searchField.current = this;
-                    highlight.call(this);
-                });
-
             }
-
         }
 
         // toggle color change
@@ -204,16 +208,134 @@ window.onload = function () {
 
     // request data basd on input value
     // and display its price
-    (function displayPrices() {
-        // get input value
+    (function priceChecker() {
+        var submit = document.querySelector('#getPrice');
+        // on btn click match input value to symbol
+        submit.addEventListener('click', function () {
+            // clear our previous lookups if any
+            removeDisplay();
+            // clear display field
+            document.getElementById('dropdown-content').innerHTML = '';
+            // Remove all saved data from sessionStorage
+            sessionStorage.clear();
+            // get input value
+            submit.value = searchField.value;
+            // search for prices based on the input value
+            lookupSymbol(submit);
+            setInterval(function () {
+                // search for prices based on the input value
+                lookupSymbol(submit);
+            }, 10000);
+        });
 
-        // match input value to symbol
 
-        // take sympbol and constract API request
+        function lookupSymbol(inputVal) {
+            makeRequest('https://min-api.cryptocompare.com/data/all/coinlist', function (data) {
+                console.log('Start to search for matching symbol...');
+                // get coin list
+                var coins = data.Data;
+                var symbol;
 
-        // request API
+                // look up by coin Name first
+                Object.keys(coins).forEach(function (key) {
+                    // check if coin name matches input
+                    if (inputVal.value.toUpperCase() === coins[key].CoinName.toUpperCase()) {
+                        symbol = coins[key].Symbol;
+                        lookupPrice.call(symbol);
+                    }
+                });
 
-        // display the return value below input field
+                // if no match by coin Name, look up by Symbol name
+                if (!symbol) {
+                    Object.keys(coins).forEach(function (key) {
+                        // check if coin ticker matches input
+                        if (inputVal.value.toUpperCase() === coins[key].Symbol.toUpperCase()) {
+                            symbol = coins[key].Symbol;
+                            lookupPrice.call(symbol);
+                        }
+                    });
+                    if (!symbol) {
+                        priceNotFound.call('There is no data for the ' + inputVal.value.toUpperCase());
+                    }
+                }
+            });
+        };
+
+        function lookupPrice() {
+            let url = 'https://min-api.cryptocompare.com/data/price?fsym=' + this + '&tsyms=BTC,ETH,USD';
+            makeRequest(url, function (data) {
+                console.log('Symbol match found, start looking up prices...')
+                let prices = data;
+                priceFound.call(prices);
+            });
+        }
+
+        // if price is found, display a list under input
+        function priceFound() {
+            // get element where display prices
+            let display = document.querySelector('.price');
+            // clear our previous lookups if any
+            removeDisplay();
+            // create a list
+            let ul = document.createElement('ul');
+            ul.className = 'price-list';
+            // append list to display element
+            display.appendChild(ul);
+            Object.keys(this).forEach(function (key) {
+                // create and append a list item for each price
+                let li = document.createElement('li');
+                let text = document.createTextNode(key + ': ');
+                li.appendChild(text);
+                let span = document.createElement('span');
+                let price = document.createTextNode(this[key]);
+                span.classList.add(key);
+                span.appendChild(price);
+                li.appendChild(span);
+                ul.appendChild(li);
+            }, this);
+            changeColor.call(this);           
+            sessionStorage.setItem('prevData', JSON.stringify(this));
+        }
+
+        // display response if no match found
+        function priceNotFound() {
+            console.log('No symbol match found...');
+            var display = document.querySelector('.price');
+            // clear our previous lookups if any
+            removeDisplay();
+            var p = document.createElement('p');
+            p.className = 'price-list';
+            var mes = document.createTextNode(this);
+            display.appendChild(p).appendChild(mes);
+        }
+
+        // clear our price display field for subsequent lookups
+        function removeDisplay() {
+            console.log('Removing prev display entry, if any');
+            var display = document.querySelector('.price');
+            var displayList = document.querySelector('.price-list');
+            if (displayList) {
+                display.removeChild(displayList);
+            }
+        }
+
+        // changes color to red/green comparing to previous data call
+        function changeColor() {
+            // retrieve data from session storage
+            let prevPrices = JSON.parse(sessionStorage.getItem('prevData'));
+            // if there's price data in session storage, change price color
+            if (prevPrices) {
+                Object.keys(this).forEach(function (key) {
+                    let item = document.querySelector('.' + key);
+                    if (prevPrices[key] < this[key]) {
+                        item.style.color = 'green';
+                    } else if (prevPrices[key] > this[key]) {
+                        item.style.color = 'red';
+                    }
+                }, this);
+            }
+        }
+
 
     })();
 
