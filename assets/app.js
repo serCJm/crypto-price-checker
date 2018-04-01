@@ -109,7 +109,7 @@ window.onload = function () {
             // reset dropdown menu
             dropdown.innerHTML = '';
             // construct a temp string for HTML insertion
-            var temp = '<ul>';
+            var temp = '<ul class="suggestions-list">';
             // match beginning to input field
             var match = new RegExp('^' + searchField.value, 'i');
             // check if coin ticker or name match the input
