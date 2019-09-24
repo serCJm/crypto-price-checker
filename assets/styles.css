@@ -1,182 +1,192 @@
-@import url('https://fonts.googleapis.com/css?family=Black+Ops+One|Monoton|Press+Start+2P');
+@import url("https://fonts.googleapis.com/css?family=Black+Ops+One|Monoton|Press+Start+2P");
 
 /* SET FLUID TYPOGRAPHY - 16px at 400px viewport and 14px minimum */
 
 :root {
-    font-size: calc(0.600em + .5vw);
+  font-size: calc(0.6em + 0.5vw);
 }
 
 h1 {
-    font-size: 1.602rem;
+  font-size: 1.602rem;
 }
 
 h2 {
-    font-size: 1.424rem;
+  font-size: 1.424rem;
 }
 
 h3 {
-    font-size: 1.266rem;
+  font-size: 1.266rem;
 }
 
 h4 {
-    font-size: 1.125rem;
+  font-size: 1.125rem;
 }
 
 p {
-    font-size: 1rem;
+  font-size: 1rem;
 }
 
 /* BACKGROUND */
 
 body {
-    margin: 0;
-    color: #fff;
+  margin: 0;
+  color: #fff;
 }
 
-
 .bg-main {
-    background: url("images/moon.jpg") no-repeat center center fixed;
-    background-size: cover;
-    height: 100vh;
-    display: flex;
-    flex-direction: column;
-    justify-content: flex-start;
-    align-items: center;
+  height: 100vh;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+  align-items: center;
+}
+
+.webp .bg-main {
+  background: url("images/moon.webp") no-repeat center center fixed;
+  background-size: cover;
+}
+
+.jpeg2000 .bg-main {
+  background: url("images/moon.jp2") no-repeat center center fixed;
+  background-size: cover;
+}
+
+.bg-main.not-supported {
+  background: url("images/moon.jpg") no-repeat center center fixed;
+  background-size: cover;
 }
 
 .logo {
-    align-self: flex-start;
-    flex: 0 1 20%;
-    margin-left: 4rem;
-    margin-top: 2rem;
-    font-family: 'Monoton', cursive;
+  align-self: flex-start;
+  flex: 0 1 20%;
+  margin-left: 4rem;
+  margin-top: 2rem;
+  font-family: "Monoton", cursive;
 }
 
 .heading {
-    flex: 0 1 15%;
-    width: 50%;
-    text-align: center;
-    font-family: 'Press Start 2P', cursive;
+  flex: 0 1 15%;
+  width: 50%;
+  text-align: center;
+  font-family: "Press Start 2P", cursive;
 }
 
 .photo-credit {
-    position: absolute;
-    bottom: 0;
-    right: 0;
+  position: absolute;
+  bottom: 0;
+  right: 0;
 }
 
 .lookup {
-    width: 100%;
-    display: flex;
-    justify-content: center;
-    position: relative;
-    text-align: center;
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  position: relative;
+  text-align: center;
 }
-
 
 /* FORM */
 
 .input-text {
-    flex: 0 1 60%;
-    max-width: 600px;
-    min-width: 5rem;
-    background-color: rgba(121, 129, 134, .5);
-    height: 3rem;
-    border-radius: .7rem 0 0 .7rem;
-    border: 2px #867979 solid;
-    padding: 1rem;
-    box-shadow: .1rem .4rem 1rem rgb(218, 218, 196, 0.5);
-    color: #DADAC4;
-    font-weight: 900;
-    font-size: 1.2rem;
+  flex: 0 1 60%;
+  max-width: 600px;
+  min-width: 5rem;
+  background-color: rgba(121, 129, 134, 0.5);
+  height: 3rem;
+  border-radius: 0.7rem 0 0 0.7rem;
+  border: 2px #867979 solid;
+  padding: 1rem;
+  box-shadow: 0.1rem 0.4rem 1rem rgb(218, 218, 196, 0.5);
+  color: #dadac4;
+  font-weight: 900;
+  font-size: 1.2rem;
 }
 
 .input-text::placeholder {
-    color: 615944;
-    opacity: .8;
-    font-weight: 700;
+  color: 615944;
+  opacity: 0.8;
+  font-weight: 700;
 }
 
 .input-text:focus {
-    outline: none;
-    animation: glow 800ms ease-out infinite alternate;
-    background-color: transparent;
-    transition: background-color 500ms ease-in;
+  outline: none;
+  animation: glow 800ms ease-out infinite alternate;
+  background-color: transparent;
+  transition: background-color 500ms ease-in;
 }
 
 @keyframes glow {
-    0% {
-		border-color: rgb(255, 189, 108);
-		box-shadow: 0 0 5px rgba(255, 179, 64, 0.2), inset 0 0 5px rgba(255, 179, 64, 0.1), 0 2px 0 #000;
-    }	
-    100% {
-		border-color: #F7931A;
-		box-shadow: 0 0 20px rgba(255, 179, 64, 0.6), inset 0 0 10px rgba(255, 179, 64, 0.4), 0 2px 0 #000;
-    }
+  0% {
+    border-color: rgb(255, 189, 108);
+    box-shadow: 0 0 5px rgba(255, 179, 64, 0.2),
+      inset 0 0 5px rgba(255, 179, 64, 0.1), 0 2px 0 #000;
+  }
+  100% {
+    border-color: #f7931a;
+    box-shadow: 0 0 20px rgba(255, 179, 64, 0.6),
+      inset 0 0 10px rgba(255, 179, 64, 0.4), 0 2px 0 #000;
+  }
 }
 
 .lookup button {
-    height: 3rem;
-    flex: 0 1 8%;
-    max-width: 7rem;
-    font-size: 2rem;
-    color: #fff;
-    border-radius: 0 .7rem .7rem 0;
-    border: 2px #867979 solid;
-    background-color: rgba(44, 47, 48, 1);
-    box-shadow: .5rem .4rem 1rem rgb(218, 218, 196, 0.5);
+  height: 3rem;
+  flex: 0 1 8%;
+  max-width: 7rem;
+  font-size: 2rem;
+  color: #fff;
+  border-radius: 0 0.7rem 0.7rem 0;
+  border: 2px #867979 solid;
+  background-color: rgba(44, 47, 48, 1);
+  box-shadow: 0.5rem 0.4rem 1rem rgb(218, 218, 196, 0.5);
 }
 
 .lookup button:hover {
-    background-color: rgba(71, 76, 79, 1);
+  background-color: rgba(71, 76, 79, 1);
 }
 
 .lookup button:focus {
-    outline: none;
+  outline: none;
 }
 
 .lookup div {
-    position: absolute;
-    flex: 0 auto;
-    width: 60%;
-    top: 3rem;
-    max-width: 600px;
-    margin-left: -4%;
-    margin-right: 4%;
-    text-align: left;
-    background-color: rgba(121, 129, 134, .7);   
-    border-radius: .7rem .7rem 0 0;
+  position: absolute;
+  flex: 0 auto;
+  width: 60%;
+  top: 3rem;
+  max-width: 600px;
+  margin-left: -4%;
+  margin-right: 4%;
+  text-align: left;
+  background-color: rgba(121, 129, 134, 0.7);
+  border-radius: 0.7rem 0.7rem 0 0;
 }
-
-
 
 @media screen and (max-width: 550px) {
-    .lookup div {
-        margin-left: -1.8rem;
-        margin-right: 2rem;
-    }
+  .lookup div {
+    margin-left: -1.8rem;
+    margin-right: 2rem;
+  }
 }
 .suggestions-list {
-    max-height: 200px;
-    overflow: scroll;
+  max-height: 200px;
+  overflow: scroll;
 }
 .suggested-coin {
-    padding: 1rem 0 0 1rem;
+  padding: 1rem 0 0 1rem;
 }
 
 .suggested-coin-actv {
-    display: inline-block;
-    margin: 0;
-    color: #F7931A;
+  display: inline-block;
+  margin: 0;
+  color: #f7931a;
 }
 
 /* PRICE RESPONSE */
 
 .price {
-    margin-top: 15%;
-    font-size: 2rem;
-    font-weight: 600;
-    color: #DADAC4;
-    font-family: 'Black Ops One', cursive;
+  margin-top: 15%;
+  font-size: 2rem;
+  font-weight: 600;
+  color: #dadac4;
+  font-family: "Black Ops One", cursive;
 }
-
