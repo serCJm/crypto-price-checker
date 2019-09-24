@@ -7,7 +7,7 @@
     <meta http-equiv="X-UA-Compatible" content="ie=edge" />
     <meta http-equiv="pragma" content="no-cache" />
     <link rel="stylesheet" href="assets/normalize.css" />
-    <link rel="stylesheet" href="assets/styles.css" class="css" />
+    <link rel="stylesheet" href="assets/styles.min.css" class="css" />
     <script
       defer
       src="https://use.fontawesome.com/releases/v5.0.6/js/all.js"
@@ -61,17 +61,259 @@
     document.querySelector(".bg-main").classList.remove("not-supported");
   </script>
   <script src="assets/modernizr-custom.js"></script>
-  <script>"use strict";window.onload=function(){(function clearInput(){document.getElementsByClassName("input-text")[0].value=""})();function makeRequest(url,cb){var xhr=new XMLHttpRequest();if(!xhr){console.log("Can't create XMLHttp Instance");return!1}
-        xhr.open("GET",url,!0);xhr.onload=function(){requestContents.call(xhr,cb)};xhr.onerror=function(){console.log("Connection Error")};xhr.send()}
-        function requestContents(cb){try{if(this.status===200){var response=JSON.parse(this.responseText);return cb(response)}else{console.log("Connected to a server but returned an error. Status: "+this.status+". Text: "+this.statusText)}}catch(e){alert("Exception:"+e.description)}}
-        var searchField=document.getElementsByClassName("input-text")[0];(function searchBox(){var matchingCoins={};searchField.addEventListener("input",function(){console.log("Start event on input field");if(this.value.length===1){lookupAPI()}else if(this.value.length===0){matchingCoins={};document.getElementById("dropdown-content").innerHTML=""}else{if(Object.keys(matchingCoins).length>0){document.getElementById("dropdown-content").innerHTML="";displayMatches(matchingCoins)}}});function lookupAPI(){makeRequest("https://min-api.cryptocompare.com/data/all/coinlist",function(data){console.log("Start API request");var coins=data.Data;var match=new RegExp("^"+searchField.value,"i");Object.keys(coins).forEach(function(key){if(match.test(coins[key].CoinName)===!0||match.test(coins[key].Symbol)){if(coins[key].IsTrading===!0&&coins[key].SortOrder<=100){matchingCoins[key]=coins[key].CoinName}}});if(searchField.value){displayMatches(matchingCoins)}})}
-        function displayMatches(obj){console.log("Display suggestions");var dropdown=document.getElementById("dropdown-content");dropdown.innerHTML="";var temp='<ul class="suggestions-list">';var match=new RegExp("^"+searchField.value,"i");Object.keys(obj).forEach(function(key){if(match.test(key)===!0||match.test(obj[key])){temp+='<li class="suggested-coin">'+obj[key]+"</li>"}});temp+="</ul>";dropdown.innerHTML=temp;var suggestions=document.querySelectorAll(".suggested-coin");if(suggestions.length>0){searchField.current=suggestions[0];searchField.current.classList.toggle("suggested-coin-actv");searchField.onkeypress=function(k){console.log(k.keyCode);if(k.keyCode===40){if(!this.current.nextElementSibling){highlight.call(this.current);this.current=suggestions[0];highlight.call(this.current)}else{highlight.call(this.current);this.current=this.current.nextElementSibling;highlight.call(this.current)}}
-        if(k.keyCode===38){if(!this.current.previousElementSibling){highlight.call(this.current);this.current=suggestions[suggestions.length-1];highlight.call(this.current)}else{highlight.call(this.current);this.current=this.current.previousElementSibling;highlight.call(this.current)}}
-        if(k.keyCode===13){this.value=this.current.textContent;document.getElementById("dropdown-content").innerHTML=""}};for(var i=0;i<suggestions.length;i++){suggestions[i].addEventListener("mouseenter",function(){searchField.current.classList.toggle("suggested-coin-actv");searchField.current=this;highlight.call(this)});suggestions[i].addEventListener("click",function(){searchField.value=this.textContent;document.getElementById("dropdown-content").innerHTML=""})}}}
-        function highlight(){this.classList.toggle("suggested-coin-actv")}})();(function priceChecker(){var submit=document.querySelector("#getPrice");submit.addEventListener("click",function(){removeDisplay();document.getElementById("dropdown-content").innerHTML="";sessionStorage.clear();submit.value=searchField.value;lookupSymbol(submit);setInterval(function(){lookupSymbol(submit)},10000)});function lookupSymbol(inputVal){makeRequest("https://min-api.cryptocompare.com/data/all/coinlist",function(data){console.log("Start to search for matching symbol...");var coins=data.Data;var symbol;Object.keys(coins).forEach(function(key){if(inputVal.value.toUpperCase()===coins[key].CoinName.toUpperCase()){symbol=coins[key].Symbol;lookupPrice.call(symbol)}});if(!symbol){Object.keys(coins).forEach(function(key){if(inputVal.value.toUpperCase()===coins[key].Symbol.toUpperCase()){symbol=coins[key].Symbol;lookupPrice.call(symbol)}});if(!symbol){priceNotFound.call("There is no data for the "+inputVal.value.toUpperCase())}}})}
-        function lookupPrice(){let url="https://min-api.cryptocompare.com/data/price?fsym="+this+"&tsyms=BTC,ETH,USD";makeRequest(url,function(data){console.log("Symbol match found, start looking up prices...");let prices=data;priceFound.call(prices)})}
-        function priceFound(){let display=document.querySelector(".price");removeDisplay();let ul=document.createElement("ul");ul.className="price-list";display.appendChild(ul);Object.keys(this).forEach(function(key){let li=document.createElement("li");let text=document.createTextNode(key+": ");li.appendChild(text);let span=document.createElement("span");let price=document.createTextNode(this[key]);span.classList.add(key);span.appendChild(price);li.appendChild(span);ul.appendChild(li)},this);changeColor.call(this);sessionStorage.setItem("prevData",JSON.stringify(this))}
-        function priceNotFound(){console.log("No symbol match found...");var display=document.querySelector(".price");removeDisplay();var p=document.createElement("p");p.className="price-list";var mes=document.createTextNode(this);display.appendChild(p).appendChild(mes)}
-        function removeDisplay(){console.log("Removing prev display entry, if any");var display=document.querySelector(".price");var displayList=document.querySelector(".price-list");if(displayList){display.removeChild(displayList)}}
-        function changeColor(){let prevPrices=JSON.parse(sessionStorage.getItem("prevData"));if(prevPrices){Object.keys(this).forEach(function(key){let item=document.querySelector("."+key);if(prevPrices[key]<this[key]){item.style.color="green"}else if(prevPrices[key]>this[key]){item.style.color="red"}},this)}}})()}</script>
+  <script>
+    "use strict";
+    window.onload = function() {
+      (function clearInput() {
+        document.getElementsByClassName("input-text")[0].value = "";
+      })();
+      function makeRequest(url, cb) {
+        var xhr = new XMLHttpRequest();
+        if (!xhr) {
+          console.log("Can't create XMLHttp Instance");
+          return !1;
+        }
+        xhr.open("GET", url, !0);
+        xhr.onload = function() {
+          requestContents.call(xhr, cb);
+        };
+        xhr.onerror = function() {
+          console.log("Connection Error");
+        };
+        xhr.send();
+      }
+      function requestContents(cb) {
+        try {
+          if (this.status === 200) {
+            var response = JSON.parse(this.responseText);
+            return cb(response);
+          } else {
+            console.log(
+              "Connected to a server but returned an error. Status: " +
+                this.status +
+                ". Text: " +
+                this.statusText
+            );
+          }
+        } catch (e) {
+          alert("Exception:" + e.description);
+        }
+      }
+      var searchField = document.getElementsByClassName("input-text")[0];
+      (function searchBox() {
+        var matchingCoins = {};
+        searchField.addEventListener("input", function() {
+          console.log("Start event on input field");
+          if (this.value.length === 1) {
+            lookupAPI();
+          } else if (this.value.length === 0) {
+            matchingCoins = {};
+            document.getElementById("dropdown-content").innerHTML = "";
+          } else {
+            if (Object.keys(matchingCoins).length > 0) {
+              document.getElementById("dropdown-content").innerHTML = "";
+              displayMatches(matchingCoins);
+            }
+          }
+        });
+        function lookupAPI() {
+          makeRequest(
+            "https://min-api.cryptocompare.com/data/all/coinlist",
+            function(data) {
+              console.log("Start API request");
+              var coins = data.Data;
+              var match = new RegExp("^" + searchField.value, "i");
+              Object.keys(coins).forEach(function(key) {
+                if (
+                  match.test(coins[key].CoinName) === !0 ||
+                  match.test(coins[key].Symbol)
+                ) {
+                  if (
+                    coins[key].IsTrading === !0 &&
+                    coins[key].SortOrder <= 100
+                  ) {
+                    matchingCoins[key] = coins[key].CoinName;
+                  }
+                }
+              });
+              if (searchField.value) {
+                displayMatches(matchingCoins);
+              }
+            }
+          );
+        }
+        function displayMatches(obj) {
+          console.log("Display suggestions");
+          var dropdown = document.getElementById("dropdown-content");
+          dropdown.innerHTML = "";
+          var temp = '<ul class="suggestions-list">';
+          var match = new RegExp("^" + searchField.value, "i");
+          Object.keys(obj).forEach(function(key) {
+            if (match.test(key) === !0 || match.test(obj[key])) {
+              temp += '<li class="suggested-coin">' + obj[key] + "</li>";
+            }
+          });
+          temp += "</ul>";
+          dropdown.innerHTML = temp;
+          var suggestions = document.querySelectorAll(".suggested-coin");
+          if (suggestions.length > 0) {
+            searchField.current = suggestions[0];
+            searchField.current.classList.toggle("suggested-coin-actv");
+            searchField.onkeypress = function(k) {
+              console.log(k.keyCode);
+              if (k.keyCode === 40) {
+                if (!this.current.nextElementSibling) {
+                  highlight.call(this.current);
+                  this.current = suggestions[0];
+                  highlight.call(this.current);
+                } else {
+                  highlight.call(this.current);
+                  this.current = this.current.nextElementSibling;
+                  highlight.call(this.current);
+                }
+              }
+              if (k.keyCode === 38) {
+                if (!this.current.previousElementSibling) {
+                  highlight.call(this.current);
+                  this.current = suggestions[suggestions.length - 1];
+                  highlight.call(this.current);
+                } else {
+                  highlight.call(this.current);
+                  this.current = this.current.previousElementSibling;
+                  highlight.call(this.current);
+                }
+              }
+              if (k.keyCode === 13) {
+                this.value = this.current.textContent;
+                document.getElementById("dropdown-content").innerHTML = "";
+              }
+            };
+            for (var i = 0; i < suggestions.length; i++) {
+              suggestions[i].addEventListener("mouseenter", function() {
+                searchField.current.classList.toggle("suggested-coin-actv");
+                searchField.current = this;
+                highlight.call(this);
+              });
+              suggestions[i].addEventListener("click", function() {
+                searchField.value = this.textContent;
+                document.getElementById("dropdown-content").innerHTML = "";
+              });
+            }
+          }
+        }
+        function highlight() {
+          this.classList.toggle("suggested-coin-actv");
+        }
+      })();
+      (function priceChecker() {
+        var submit = document.querySelector("#getPrice");
+        submit.addEventListener("click", function() {
+          removeDisplay();
+          document.getElementById("dropdown-content").innerHTML = "";
+          sessionStorage.clear();
+          submit.value = searchField.value;
+          lookupSymbol(submit);
+          setInterval(function() {
+            lookupSymbol(submit);
+          }, 10000);
+        });
+        function lookupSymbol(inputVal) {
+          makeRequest(
+            "https://min-api.cryptocompare.com/data/all/coinlist",
+            function(data) {
+              console.log("Start to search for matching symbol...");
+              var coins = data.Data;
+              var symbol;
+              Object.keys(coins).forEach(function(key) {
+                if (
+                  inputVal.value.toUpperCase() ===
+                  coins[key].CoinName.toUpperCase()
+                ) {
+                  symbol = coins[key].Symbol;
+                  lookupPrice.call(symbol);
+                }
+              });
+              if (!symbol) {
+                Object.keys(coins).forEach(function(key) {
+                  if (
+                    inputVal.value.toUpperCase() ===
+                    coins[key].Symbol.toUpperCase()
+                  ) {
+                    symbol = coins[key].Symbol;
+                    lookupPrice.call(symbol);
+                  }
+                });
+                if (!symbol) {
+                  priceNotFound.call(
+                    "There is no data for the " + inputVal.value.toUpperCase()
+                  );
+                }
+              }
+            }
+          );
+        }
+        function lookupPrice() {
+          let url =
+            "https://min-api.cryptocompare.com/data/price?fsym=" +
+            this +
+            "&tsyms=BTC,ETH,USD";
+          makeRequest(url, function(data) {
+            console.log("Symbol match found, start looking up prices...");
+            let prices = data;
+            priceFound.call(prices);
+          });
+        }
+        function priceFound() {
+          let display = document.querySelector(".price");
+          removeDisplay();
+          let ul = document.createElement("ul");
+          ul.className = "price-list";
+          display.appendChild(ul);
+          Object.keys(this).forEach(function(key) {
+            let li = document.createElement("li");
+            let text = document.createTextNode(key + ": ");
+            li.appendChild(text);
+            let span = document.createElement("span");
+            let price = document.createTextNode(this[key]);
+            span.classList.add(key);
+            span.appendChild(price);
+            li.appendChild(span);
+            ul.appendChild(li);
+          }, this);
+          changeColor.call(this);
+          sessionStorage.setItem("prevData", JSON.stringify(this));
+        }
+        function priceNotFound() {
+          console.log("No symbol match found...");
+          var display = document.querySelector(".price");
+          removeDisplay();
+          var p = document.createElement("p");
+          p.className = "price-list";
+          var mes = document.createTextNode(this);
+          display.appendChild(p).appendChild(mes);
+        }
+        function removeDisplay() {
+          console.log("Removing prev display entry, if any");
+          var display = document.querySelector(".price");
+          var displayList = document.querySelector(".price-list");
+          if (displayList) {
+            display.removeChild(displayList);
+          }
+        }
+        function changeColor() {
+          let prevPrices = JSON.parse(sessionStorage.getItem("prevData"));
+          if (prevPrices) {
+            Object.keys(this).forEach(function(key) {
+              let item = document.querySelector("." + key);
+              if (prevPrices[key] < this[key]) {
+                item.style.color = "green";
+              } else if (prevPrices[key] > this[key]) {
+                item.style.color = "red";
+              }
+            }, this);
+          }
+        }
+      })();
+    };
+  </script>
 </html>
