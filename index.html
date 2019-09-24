@@ -17,7 +17,7 @@
   </head>
 
   <body>
-    <main class="bg-main">
+    <main class="bg-main not-supported">
       <h4 class="logo">CryptoLogo</h4>
       <h1 class="heading">Check Your Favorite Crypto Price</h1>
       <div class="lookup">
@@ -57,5 +57,10 @@
       </a>
     </main>
   </body>
+  <script>
+    // fallback check for jpeg image format if JS is not supported in browser.
+    document.querySelector(".bg-main").classList.remove("not-supported");
+  </script>
   <script src="assets/modernizr-custom.js"></script>
+  <script></script>
 </html>
